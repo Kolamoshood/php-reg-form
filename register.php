@@ -1,21 +1,93 @@
 <?php
 
-include ("config.php");
-if (isset($_POST['register'])){
-    $name = mysqli_real_escape_string($connection, $_POST['name']);
-    $email = mysqli_real_escape_string($connection, $_POST['email']);
-    $dateOfBirth = mysqli_real_escape_string($connection, $_POST['dateOfBirth']);
-    $gender = mysqli_real_escape_string($connection, $_POST['gender']);
-    $country = mysqli_real_escape_string($connection, $_POST['country']);
-    
-    
-    $query = "INSERT INTO users (name, email, dateOfBirth, gender, country) VALUES ('$name', '$email', '$dateOfBirth', 'gender', 'country')";
-    if(mysqli_query($connection, $query)) {
-    $message = 'You have succesfully registered, proceed to log in';
-    }else {
-    $error = 'Could not register, check your details!';
-    }
+
+$error = '';
+$message = '';
+
+function clean_text($string){
+ $string = trim($string);
+ $string = stripslashes($string);
+ $string = htmlspecialchars($string);
+ return $string;
 }
+
+if(isset($_POST["submit"]))
+{
+ if(empty($_POST["name"]))
+ {
+  $error .= "Please Enter your Name";
+ }
+ else
+ {
+  $message = clean_text($_POST["name"]);
+  if(!preg_match("/^[a-zA-Z ]*$/",$name))
+  {
+   $error .= "Invalid name entered";
+  }
+ }
+ if(empty($_POST["email"]))
+ {
+  $error = "Please Enter your Email";
+ }
+ else
+ {
+  $message = clean_text($_POST["email"]);
+  if(!filter_var($email, FILTER_VALIDATE_EMAIL))
+  {
+   $error = "Invalid email format";
+  }
+ }
+ if(empty($_POST["dateOfBirth"]))
+ {
+  $error = "Date of birth is required";
+ }
+ else
+ {
+  $message = clean_text($_POST["dateOfBirth"]);
+ }
+ if(empty($_POST["gender"]))
+ {
+  $error .= "Gender is required";
+ }
+ else
+ {
+  $message = clean_text($_POST["gender"]);
+ }
+    if(empty($_POST["country"]))
+ {
+  $error = "Country is required";
+ }
+ else
+ {
+  $message = clean_text($_POST["country"]);
+ }
+
+ if($error == '')
+ {
+  $file_open = fopen("userdata.csv", "a");
+  $no_rows = count(file("userdata.csv"));
+  if($no_rows > 1)
+  {
+   $no_rows = ($no_rows - 1) + 1;
+  }
+  $form_data = array(
+   'sr_no'  => $no_rows,
+   'name'  => $name,
+   'email'  => $email,
+   'dateOfBirth' => $dateOfBirth,
+   'gender' => $gender,
+    'country' => $country
+  );
+  fputcsv($file_open, $form_data);
+  $message = "We have succesfully saved your records";
+  $name = '';
+  $email = '';
+  $dateOfBirth = '';
+  $gender = '';
+  $country = '';
+ }
+}
+
 ?>
 
 <!DOCTYPE html>
