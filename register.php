@@ -3,6 +3,10 @@
 
 $error = '';
 $message = '';
+$email = '';
+$dateOfBirth = '';
+$gender = '';
+$country = '';
 
 function clean_text($string){
  $string = trim($string);
@@ -11,7 +15,7 @@ function clean_text($string){
  return $string;
 }
 
-if(isset($_POST["submit"]))
+if(isset($_POST["register"]))
 {
  if(empty($_POST["name"]))
  {
@@ -19,8 +23,9 @@ if(isset($_POST["submit"]))
  }
  else
  {
-  $message = clean_text($_POST["name"]);
-  if(!preg_match("/^[a-zA-Z ]*$/",$name))
+  $name = clean_text($_POST["name"]);
+ 
+  if(!preg_match("/^[a-zA-Z ]*$/",$message))
   {
    $error .= "Invalid name entered";
   }
@@ -31,11 +36,7 @@ if(isset($_POST["submit"]))
  }
  else
  {
-  $message = clean_text($_POST["email"]);
-  if(!filter_var($email, FILTER_VALIDATE_EMAIL))
-  {
-   $error = "Invalid email format";
-  }
+  $email = clean_text($_POST["email"]);
  }
  if(empty($_POST["dateOfBirth"]))
  {
@@ -43,7 +44,7 @@ if(isset($_POST["submit"]))
  }
  else
  {
-  $message = clean_text($_POST["dateOfBirth"]);
+  $dateOfBirth = clean_text($_POST["dateOfBirth"]);
  }
  if(empty($_POST["gender"]))
  {
@@ -51,7 +52,7 @@ if(isset($_POST["submit"]))
  }
  else
  {
-  $message = clean_text($_POST["gender"]);
+  $gender = clean_text($_POST["gender"]);
  }
     if(empty($_POST["country"]))
  {
@@ -59,7 +60,7 @@ if(isset($_POST["submit"]))
  }
  else
  {
-  $message = clean_text($_POST["country"]);
+  $country = clean_text($_POST["country"]);
  }
 
  if($error == '')
@@ -139,22 +140,18 @@ if(isset($_POST["submit"]))
                         <label for="dateOfBirth" class="form-label">Date of Birth</label>
                         <input type="date" class="form-control" name = "dateOfBirth" aria-describedby="dateOfBirth">
                 </div>
-               <div class="mb-3">
-                        <label for="gender" class="form-label"> Gender </label>
-                        <input type="text" class="form-control" name = "gender" aria-describedby="gender">
-                </div>
-               <div class="mb-3">
-                        <label for="dateOfBirth" class="form-label">Date of Birth</label>
-                        <input type="date" class="form-control" name = "dateOfBirth" aria-describedby="dateOfBirth">
-                </div>
-              <div class="mb-3>
-               <label for="gender" class="form-label"> Gender: </label>
+                <div class="mb-3">
+                            <label for="gender" class="form-label"> Gender: </label>
                             <input type="text" class="form-control" name="gender" aria-describedby="dateOfBirth" list="genderlist">
                                 <datalist id="genderlist">
                                     <option value="Male"></option>
                                     <option value="Female"></option>
                                 </datalist>
               </div>
+               <div class="mb-3">
+                        <label for="country" class="form-label">Country</label>
+                        <input type="text" class="form-control" name = "country" aria-describedby="country">
+                </div>
                 <div>
                 <button type="submit" name="register" class="btn btn-primary col-4 offset-4">Register</button>
                 </div>
